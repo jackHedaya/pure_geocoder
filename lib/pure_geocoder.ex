@@ -20,9 +20,16 @@ defmodule PureGeocoder do
 
     case body do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        get_location_code(body)
+        code = get_location_code(body)
+
+        case code do
+          nil -> {:error, "Unable to find a location code."}
+          _ -> get_coordinates(code)
+        end
+
       {:ok, %HTTPoison.Response{status_code: _}} ->
         {:error, "Error while reaching OpenStreetMap!"}
+
       {:error, %HTTPoison.Error{reason: reason}} ->
         {:error, "HTTPoison error: \"" <> reason <> "\""}
     end
@@ -54,7 +61,42 @@ defmodule PureGeocoder do
       end
     end)
   end
-  def reverse_geocode(lat, lng) do
 
+  defp get_coordinates(code) do
+    res = HTTPoison.get("https://nominatim.openstreetmap.org/details.php?place_id=" <> code)
+
+    case res do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        pull_coordinates_from_body(body)
+
+      {:ok, %HTTPoison.Response{status_code: _}} ->
+        {:error, "Error while reaching OpenStreetMap!"}
+
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        {:error, "HTTPoison error: \"" <> reason <> "\""}
+    end
+  end
+
+  defp pull_coordinates_from_body(body) do
+    parsed = Floki.parse(body)
+
+    {_, _, [loc]} = Enum.at(Floki.find(parsed, "td"), 15)
+
+    split_loc = String.split(loc, ",")
+
+    lat =
+      split_loc
+      |> hd()
+      |> String.to_float()
+
+    lng =
+      split_loc
+      |> List.last()
+      |> String.to_float()
+
+    %{:latitude => lat, :longitude => lng}
+  end
+
+  def reverse_geocode(lat, lng) do
   end
 end
