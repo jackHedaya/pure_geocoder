@@ -2,7 +2,7 @@
 
 A library for geocoding addresses and reverse geocoding coordinates. Uses <a href="https://github.com/openstreetmap/Nominatim">Nominatim</a>.
 
-Documentation: https://hexdocs.pm/pure_geocoder/api-reference.html
+<a href="hexdocs.pm/pure_geocoder/">Documentation</a>
 
 ## Contributing
 ### Getting Started
