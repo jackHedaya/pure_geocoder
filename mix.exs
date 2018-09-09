@@ -22,7 +22,7 @@ defmodule PureGeocoder.MixProject do
 
   defp description do
     """
-    Library for geocoding addresses and reverse geocoding coordinates. Uses OpenStreetMap.
+    A library for geocoding addresses and reverse geocoding coordinates. Uses OpenStreetMap.
     """
   end
 
