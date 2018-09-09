@@ -6,69 +6,40 @@ defmodule PureGeocoder do
   @doc """
   Geocodes an address.
 
-  Returns `{:ok, %{longitude, latitude}}` or `{:error, reason}`
+  Returns `{:ok, %{lat: longitude, lng: latitude}}` or `{:error, reason}`
 
   ## Examples
 
       iex> PureGeocoder.geocode("20 West 34th St, New York, NY 10118")
-      :world
+      {:ok, %{lat: 40.7496458, lng: -73.9874169}}
 
   """
   def geocode(string) do
     remove_spaces = string |> String.replace(" ", "+")
-    body = HTTPoison.get("https://nominatim.openstreetmap.org/search.php?q=" <> remove_spaces)
 
-    case body do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        code = get_location_code(body)
+    body =
+      HTTPoison.get(
+        "https://nominatim.openstreetmap.org/search.php?q=" <> remove_spaces <> "&format=json"
+      )
 
-        case code do
-          nil -> {:error, "Unable to find a location code."}
-          _ -> get_coordinates(code)
-        end
+    with {:ok, %HTTPoison.Response{status_code: 200, body: body}} <- body,
+         {:ok, data} <- Poison.decode(body) do
+      if length(data) > 0 do
+        real = data |> hd()
 
-      {:ok, %HTTPoison.Response{status_code: _}} ->
-        {:error, "Error while reaching OpenStreetMap!"}
+        lat =
+          Map.get(real, "lat")
+          |> String.to_float()
 
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, "HTTPoison error: \"" <> reason <> "\""}
-    end
-  end
+        lng =
+          Map.get(real, "lon")
+          |> String.to_float()
 
-  defp get_location_code(body) do
-    parsed = Floki.parse(body)
-
-    data = Floki.find(parsed, ".details")
-
-    if length(data) > 0 do
-      {_, props, _} = List.first(data)
-
-      {_, val} = find_prop_with_key(props, "href")
-
-      Regex.run(~r/^details\.php\?place_id=(\d*)$/, val)
-      |> tl()
-      |> hd()
-    else
-      nil
-    end
-  end
-
-  defp find_prop_with_key(props, key) do
-    Enum.find(props, fn x ->
-      case x do
-        {^key, _} -> true
-        _ -> false
+        {:ok, %{lat: lat, lng: lng}}
+      else
+        {:error, "Location not found!"}
       end
-    end)
-  end
-
-  defp get_coordinates(code) do
-    res = HTTPoison.get("https://nominatim.openstreetmap.org/details.php?place_id=" <> code)
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        pull_coordinates_from_body(body)
-
+    else
       {:ok, %HTTPoison.Response{status_code: _}} ->
         {:error, "Error while reaching OpenStreetMap!"}
 
@@ -77,26 +48,45 @@ defmodule PureGeocoder do
     end
   end
 
-  defp pull_coordinates_from_body(body) do
-    parsed = Floki.parse(body)
+  @doc """
+  Reverse geocodes a pair of coordinates.
 
-    {_, _, [loc]} = Enum.at(Floki.find(parsed, "td"), 15)
+  Returns `{:ok, address}` or `{:error, reason}`
 
-    split_loc = String.split(loc, ",")
+  ## Examples
 
-    lat =
-      split_loc
-      |> hd()
-      |> String.to_float()
+      iex> PureGeocoder.geocode(%{lat: 40.7496458, lng: -73.9874169})
+      "20 West 34th St, New York, NY 10118"
 
-    lng =
-      split_loc
-      |> List.last()
-      |> String.to_float()
+      iex> PureGeocoder.geocode({40.7496458, -73.9874169})
+      "20 West 34th St, New York, NY 10118"
 
-    %{:latitude => lat, :longitude => lng}
+      iex> PureGeocoder.geocode(40.7496458, -73.9874169)
+      "20 West 34th St, New York, NY 10118"
+  """
+  def reverse_geocode(%{:latitude => lat, :longitude => lng}) do
+    reverse_geocode(lat, lng)
+  end
+
+  def reverse_geocode({lat, lng}) do
+    reverse_geocode(lat, lng)
   end
 
   def reverse_geocode(lat, lng) do
+    res = HTTPoison.get("https://nominatim.openstreetmap.org/search/?q=" <> lat <> ",%20" <> lng)
+
+    case res do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        html = Floki.parse(body)
+
+        Floki.find(html, ".name")
+        |> IO.inspect()
+
+      {:ok, %HTTPoison.Response{status_code: _}} ->
+        {:error, "Error while reaching OpenStreetMap!"}
+
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        {:error, "HTTPoison error: \"" <> reason <> "\""}
+    end
   end
 end
