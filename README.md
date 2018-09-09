@@ -1,6 +1,6 @@
 # PureGeocoder
 
-A Geocoder that will work by scraping OpenStreetMap. 
+A library for geocoding addresses and reverse geocoding coordinates. Uses <a href="https://github.com/openstreetmap/Nominatim">Nominatim</a>.
 
 Documentation: https://hexdocs.pm/pure_geocoder/api-reference.html
 
