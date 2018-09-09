@@ -11,5 +11,5 @@ A Geocoder that will work by scraping OpenStreetMap.
 Currently in development. Installation will be available from https://hex.pm after release.
 
 ### Dependencies
-+ <a href="https://github.com/philss/floki">Floki</a>
++ <a href="https://github.com/devinus/poison">Poison</a>
 + <a href="https://github.com/edgurgel/httpoison">HTTPoison</a>
