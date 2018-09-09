@@ -4,7 +4,8 @@ A Geocoder that will work by scraping OpenStreetMap.
 
 Documentation: https://hexdocs.pm/pure_geocoder/api-reference.html
 
-## Getting Started
+## Contributing
+### Getting Started
 + `$ git clone https://github.com/jackHedaya/pure_geocoder`
 + `$ cd pure_geocoder`
 + `$ mix deps.get`
