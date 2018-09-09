@@ -2,13 +2,19 @@
 
 A Geocoder that will work by scraping OpenStreetMap. 
 
+Documentation: https://hexdocs.pm/pure_geocoder/api-reference.html
+
 ## Getting Started
 + `$ git clone https://github.com/jackHedaya/pure_geocoder`
 + `$ cd pure_geocoder`
 + `$ mix deps.get`
 
 ## Installation
-Currently in development. Installation will be available from https://hex.pm after release.
+Add dependency to `mix.exs` file:
+
+`defp deps do 
+   [{:pure_geocoder, "~> 0.1.0"}] 
+end`
 
 ### Dependencies
 + <a href="https://github.com/devinus/poison">Poison</a>
