@@ -10,8 +10,8 @@ defmodule PureGeocoder do
 
   ## Examples
 
-      iex> PureGeocoder.geocode("20 West 34th St, New York, NY 10118")
-      {:ok, %{lat: 40.7496458, lng: -73.9874169}}
+      iex> PureGeocoder.geocode("350 5th Ave, New York, NY 10118")
+      {:ok, %{lat: 40.7483271, lng: -73.9856549}}
 
   """
   def geocode(string) do
@@ -19,7 +19,7 @@ defmodule PureGeocoder do
 
     body =
       HTTPoison.get(
-        "https://nominatim.openstreetmap.org/search.php?q=" <> remove_spaces <> "&format=json"
+        "https://nominatim.openstreetmap.org/search?q=#{remove_spaces}&format=json"
       )
 
     with {:ok, %HTTPoison.Response{status_code: 200, body: body}} <- body,
@@ -55,16 +55,16 @@ defmodule PureGeocoder do
 
   ## Examples
 
-      iex> PureGeocoder.geocode(%{lat: 40.7496458, lng: -73.9874169})
-      "20 West 34th St, New York, NY 10118"
+      iex> PureGeocoder.geocode(%{lat: 40.7483271, lng: -73.9856549})
+      {:ok, "350 5th Avenue, NYC, New York, 10018, USA"}
 
-      iex> PureGeocoder.geocode({40.7496458, -73.9874169})
-      "20 West 34th St, New York, NY 10118"
+      iex> PureGeocoder.geocode({40.7483271, -73.9856549})
+      {:ok, "350 5th Avenue, NYC, New York, 10018, USA"}
 
-      iex> PureGeocoder.geocode(40.7496458, -73.9874169)
-      "20 West 34th St, New York, NY 10118"
+      iex> PureGeocoder.geocode(40.7483271, -73.9856549)
+      {:ok, "350 5th Avenue, NYC, New York, 10018, USA"}
   """
-  def reverse_geocode(%{:latitude => lat, :longitude => lng}) do
+  def reverse_geocode(%{:lat => lat, :lng => lng}) do
     reverse_geocode(lat, lng)
   end
 
@@ -73,17 +73,35 @@ defmodule PureGeocoder do
   end
 
   def reverse_geocode(lat, lng) do
-    res = HTTPoison.get("https://nominatim.openstreetmap.org/search/?q=" <> lat <> ",%20" <> lng)
+    lat_string = to_string(lat)
+    lng_string = to_string(lng)
 
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        html = Floki.parse(body)
+    body =
+      HTTPoison.get(
+        "https://nominatim.openstreetmap.org/reverse?format=json&lat=#{lat_string}&lon=#{lng_string}"
+      )
 
-        Floki.find(html, ".name")
-        |> IO.inspect()
+    with {:ok, %HTTPoison.Response{status_code: 200, body: body}} <- body,
+         {:ok, data} <- Poison.decode(body) do
+      %{
+        "address" => %{
+          "house_number" => house_num,
+          "road" => road,
+          "city" => city,
+          "state" => state,
+          "postcode" => zipcode,
+          "country" => country
+        }
+      } = data
 
-      {:ok, %HTTPoison.Response{status_code: _}} ->
-        {:error, "Error while reaching OpenStreetMap!"}
+      display =
+        house_num <>
+          " " <> road <> ", " <> city <> ", " <> state <> ", " <> zipcode <> ", " <> country
+
+      {:ok, display}
+    else
+      {:ok, %HTTPoison.Response{status_code: code}} ->
+        {:error, "Error while reaching OpenStreetMap! Status Code: #{code}"}
 
       {:error, %HTTPoison.Error{reason: reason}} ->
         {:error, "HTTPoison error: \"" <> reason <> "\""}
