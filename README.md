@@ -1,7 +1,7 @@
 # PureGeocoder
 
-[![Hex.pm](https://img.shields.io/hexpm/v/pure_geocoder.svg)](https://hex.pm/hexpm/v/pure_geocoder)
-[![Hex.pm](https://img.shields.io/hexpm/dt/pure_geocoder.svg)](https://hex.pm/hexpm/dt/pure_geocoder)
+[![Hex.pm](https://img.shields.io/hexpm/v/pure_geocoder.svg)](https://hex.pm/packages/pure_geocoder)
+[![Hex.pm](https://img.shields.io/hexpm/dt/pure_geocoder.svg)](https://hex.pm/packages/pure_geocoder)
 
 A library for geocoding addresses and reverse geocoding coordinates. Uses <a href="https://github.com/openstreetmap/Nominatim">Nominatim</a>.
 
