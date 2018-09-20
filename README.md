@@ -1,5 +1,5 @@
 # PureGeocoder
-
+[![Build Status](https://travis-ci.org/jackHedaya/pure_geocoder.svg?branch=master)](https://travis-ci.org/jackHedaya/pure_geocoder)
 [![Hex.pm](https://img.shields.io/hexpm/v/pure_geocoder.svg)](https://hex.pm/packages/pure_geocoder)
 [![Hex.pm](https://img.shields.io/hexpm/dt/pure_geocoder.svg)](https://hex.pm/packages/pure_geocoder)
 
