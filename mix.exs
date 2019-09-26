@@ -38,7 +38,7 @@ defmodule PureGeocoder.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:httpoison, "~> 1.3.0"},
+      {:httpoison, "~> 1.5.1"},
       {:poison, "~> 4.0"},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]
