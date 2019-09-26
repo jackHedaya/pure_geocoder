@@ -17,7 +17,7 @@ A library for geocoding addresses and reverse geocoding coordinates. Uses <a hre
 Add dependency to `mix.exs` file:
 
 `defp deps do 
-   [{:pure_geocoder, "~> 0.1.0"}] 
+   [{:pure_geocoder, "~> 0.1.1"}] 
 end`
 
 ### Dependencies

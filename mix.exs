@@ -4,7 +4,7 @@ defmodule PureGeocoder.MixProject do
   def project do
     [
       app: :pure_geocoder,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       description: description(),
