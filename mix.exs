@@ -28,7 +28,7 @@ defmodule PureGeocoder.MixProject do
 
   defp package do
     [
-      files: ["lib", "mix.exs", "README*"],
+      files: ["lib", "mix.exs", "mix.lock", "README*"],
       maintainers: ["Jack Hedaya"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/jackHedaya/pure_geocoder"}
