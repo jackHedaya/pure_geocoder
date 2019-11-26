@@ -8,6 +8,6 @@ defmodule PureGeocoderTest do
 
   test "reverse geocodes the Empire State Building properly" do
     assert PureGeocoder.reverse_geocode(%{lat: 40.7483271, lng: -73.9856549}) ==
-      {:ok, "350 5th Avenue, NYC, New York, 10018, USA"}
+      {:ok, "350 5th Avenue, New York, New York, 10018, United States of America"}
   end
 end
