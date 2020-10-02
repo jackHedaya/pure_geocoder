@@ -55,13 +55,13 @@ defmodule PureGeocoder do
 
   ## Examples
 
-      iex> PureGeocoder.geocode(%{lat: 40.7483271, lng: -73.9856549})
+      iex> PureGeocoder.reverse_geocode(%{lat: 40.7483271, lng: -73.9856549})
       {:ok, "350 5th Avenue, NYC, New York, 10018, USA"}
 
-      iex> PureGeocoder.geocode({40.7483271, -73.9856549})
+      iex> PureGeocoder.reverse_geocode({40.7483271, -73.9856549})
       {:ok, "350 5th Avenue, NYC, New York, 10018, USA"}
 
-      iex> PureGeocoder.geocode(40.7483271, -73.9856549)
+      iex> PureGeocoder.reverse_geocode(40.7483271, -73.9856549)
       {:ok, "350 5th Avenue, NYC, New York, 10018, USA"}
   """
   def reverse_geocode(%{:lat => lat, :lng => lng}) do
