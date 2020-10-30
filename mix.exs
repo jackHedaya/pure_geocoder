@@ -4,8 +4,8 @@ defmodule PureGeocoder.MixProject do
   def project do
     [
       app: :pure_geocoder,
-      version: "0.1.1",
-      elixir: "~> 1.6",
+      version: "0.1.2",
+      elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       description: description(),
       package: package(),
@@ -38,8 +38,8 @@ defmodule PureGeocoder.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:httpoison, "~> 1.6.1"},
-      {:poison, "~> 4.0"},
+      {:httpoison, "~> 1.7"},
+      {:poison, "~> 4.0.1"},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]
   end
